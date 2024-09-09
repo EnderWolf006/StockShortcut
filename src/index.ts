@@ -120,6 +120,11 @@ basekit.addField({
           extra: {
             formatter: NumberFormatter.INTEGER
           }
+        },
+        {
+          key: 'tmpError',
+          type: FieldType.Text,
+          title: t('label.outField.volume'),
         }
       ],
     },
@@ -156,7 +161,8 @@ basekit.addField({
       return {
         code: FieldCode.Success,
         data: {
-          weather: String(error)
+          group: String(new Date().getTime()),
+          tmpError: String(error)
         },
       };
     }
