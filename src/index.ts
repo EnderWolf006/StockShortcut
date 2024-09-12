@@ -5,7 +5,7 @@ const tencent = stocks.tencent;
 const { t } = field;
 
 // 通过addDomainList添加请求接口的域名
-basekit.addDomainList(['quotes.sina.cn']);
+basekit.addDomainList(['quotes.sina.cn', 'suggest3.sinajs.cn', 'hq.sinajs.cn']);
 
 basekit.addField({
   // 定义捷径的i18n语言资源
@@ -120,11 +120,6 @@ basekit.addField({
           extra: {
             formatter: NumberFormatter.INTEGER
           }
-        },
-        {
-          key: 'tmpError',
-          type: FieldType.Text,
-          title: 'tmpError',
         }
       ],
     },
@@ -159,11 +154,7 @@ basekit.addField({
       }
     } catch (error) {
       return {
-        code: FieldCode.Success,
-        data: {
-          group: String(new Date().getTime()),
-          tmpError: String(error)
-        },
+        code: FieldCode.Error,
       };
     }
   },
