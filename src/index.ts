@@ -129,18 +129,22 @@ basekit.addField({
     try {
       let { stock, date } = formItemParams;
       stock = stock[0].text
+      console.log(`Step 1: 获取到入参 ${stock} ${date}`);
+      
       const res = await tencent.searchStocks([stock])
       if (res.length) {
         stock = res[0].code.toLowerCase()
       }
+      console.log(`Step 2: 获取到股票查询结果 ${stock}`);
       const scale = 240
       let len = 1 + Math.floor((new Date().getTime() - new Date(date).getTime()) / (1000 * 60 * 60 * 24))
       if (len < 0) throw new Error("只能查询今天或历史信息");
       let api = `https://quotes.sina.cn/cn/api/jsonp_v2.php/var%20_${stock}_${scale}_${new Date().getTime()}=/CN_MarketDataService.getKLineData?symbol=${stock}&scale=${scale}&ma=no&datalen=${len}`;
-      console.log(api);
+      console.log(`Step 3: 合成api url ${api}`);
 
       let data = await (await (await context.fetch(api, { method: 'GET' }))).text();
       const { open, high, low, close, volume } = JSON.parse(data.split('=(')[1].replace(');', ''))[0]
+      console.log(`Step 4: 解析返回数据 ${open} ${high} ${low} ${close} ${volume}`);
       return {
         code: FieldCode.Success,
         data: {
@@ -153,6 +157,7 @@ basekit.addField({
         }
       }
     } catch (error) {
+      console.log(`报错: ${error}`);
       return {
         code: FieldCode.Error,
       };
