@@ -1,5 +1,4 @@
 import { basekit, FieldType, field, FieldComponent, FieldCode, NumberFormatter, AuthorizationType, DateFormatter } from '@lark-opdev/block-basekit-server-api';
-import dayjs from 'dayjs';
 import { stocks } from "stock-api";
 const tencent = stocks.tencent;
 const { t } = field;
