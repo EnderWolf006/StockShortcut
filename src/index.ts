@@ -1,6 +1,4 @@
 import { basekit, FieldType, field, FieldComponent, FieldCode, NumberFormatter, AuthorizationType, DateFormatter } from '@lark-opdev/block-basekit-server-api';
-import { stocks } from "stock-api";
-const tencent = stocks.tencent;
 const { t } = field;
 
 // 通过addDomainList添加请求接口的域名
@@ -129,11 +127,28 @@ basekit.addField({
       let { stock, date } = formItemParams;
       stock = stock[0].text
       console.log(`Step 1: 获取到入参 ${stock} ${date}`);
-      
-      const res = await tencent.searchStocks([stock])
-      if (res.length) {
-        stock = res[0].code.toLowerCase()
+      if (!Number.isNaN(Number(stock))) {
+        const searchApi = "https://smartbox.gtimg.cn/s3/?v=2&t=all&c=1&q=" + stock
+        let res = await (await (await context.fetch(searchApi, { method: 'GET' }))).text()
+        let rows = res.replace('v_hint="', "").replace('"', "").split("^");
+        let codes = rows.map(function (row: any) {
+          var _a = row.split("~"), type = _a[0], code = _a[1];
+          switch (type) {
+            case "sz":
+              return "SZ" + code
+            case "sh":
+              return "SH" + code
+            case "hk":
+              return "HK" + code
+            case "us":
+              return "US" + code.split(".")[0].toUpperCase() + code;
+            default:
+              return code;
+          }
+        });
+        stock = codes[0]
       }
+      stock = stock.toLowerCase()
       console.log(`Step 2: 获取到股票查询结果 ${stock}`);
       const scale = 240
       let len = 1 + Math.floor((new Date().getTime() - new Date(date).getTime()) / (1000 * 60 * 60 * 24))
