@@ -17,6 +17,8 @@ basekit.addField({
         'label.outField.high': '最高价',
         'label.outField.low': '最低价',
         'label.outField.volume': '成交量(股)',
+        'label.tooltips.text': '股票代码格式说明',
+        'label.tooltips.link': '点我跳转',
       },
       'en-US': {
         'label.fieldSelect.stock': 'Please select the field where the stock code is located',
@@ -27,6 +29,8 @@ basekit.addField({
         'label.outField.high': 'High price',
         'label.outField.low': 'Low price',
         'label.outField.volume': 'Volume (shares)',
+        'label.tooltips.text': 'Stock code format description',
+        'label.tooltips.link': 'Click here to jump',
       },
       'ja-JP': {
         'label.fieldSelect.stock': 'ストックコードのフィールドを選択してください',
@@ -37,6 +41,8 @@ basekit.addField({
         'label.outField.high': '最高値',
         'label.outField.low': '最安値',
         'label.outField.volume': '出来高',
+        'label.tooltips.text': 'ストックコードのフォーマット説明',
+        'label.tooltips.link': 'こちらをクリック',
       },
     }
   },
@@ -55,11 +61,11 @@ basekit.addField({
       tooltips: [
         {
           type: 'text',
-          content: '股票代码格式说明'
+          content: t('label.tooltips.text'),
         },
         {
           type: 'link',
-          text: '点我跳转',
+          text: t('label.tooltips.link'),
           link: 'https://feishu.feishu.cn/docx/FYjGdefpcokLqQxwPGIcs0lIngf'
         }
       ] as any,
