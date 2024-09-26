@@ -97,13 +97,6 @@ basekit.addField({
           isGroupByKey: true,
           hidden: true
         },
-
-        {
-          key: 'name',
-          type: FieldType.Text,
-          title: t('label.outField.name'),
-          primary: true,
-        },
         {
           key: 'open',
           type: FieldType.Number,
@@ -111,6 +104,7 @@ basekit.addField({
           extra: {
             formatter: NumberFormatter.DIGITAL_ROUNDED_2
           },
+          primary: true
         },
         {
           key: 'high',
@@ -157,10 +151,8 @@ basekit.addField({
       const searchApi = "https://smartbox.gtimg.cn/s3/?v=2&t=all&c=1&q=" + stock
       let res = await (await (await context.fetch(searchApi, { method: 'GET' }))).text()
       let rows = res.replace('v_hint="', "").replace('"', "").split("^");
-      let name;
       let codes = rows.map(function (row: any) {
         let _a = row.split("~"), type = _a[0], code = _a[1]
-        name = _a[2];
         switch (type) {
           case "sz":
             return "SZ" + code
@@ -187,12 +179,11 @@ basekit.addField({
 
       let data = await (await (await context.fetch(api, { method: 'GET' }))).text();
       const { open, high, low, close, volume } = JSON.parse(data.split('=(')[1].replace(');', ''))[0]
-      console.log(`Step 4: 解析返回数据 ${open} ${high} ${low} ${close} ${volume} ${JSON.parse('"' + name + '"')}`);
+      console.log(`Step 4: 解析返回数据 ${open} ${high} ${low} ${close} ${volume}`);
       return {
         code: FieldCode.Success,
         data: {
           group: String(new Date().getTime()),
-          name: JSON.parse('"' + name + '"'),
           open: Number(open),
           high: Number(high),
           low: Number(low),
