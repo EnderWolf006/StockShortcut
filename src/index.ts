@@ -104,8 +104,8 @@ basekit.addField({
           extra: {
             formatter: NumberFormatter.DIGITAL_ROUNDED_2
           },
-          primary: true
         },
+
         {
           key: 'high',
           type: FieldType.Number,
@@ -137,7 +137,13 @@ basekit.addField({
           extra: {
             formatter: NumberFormatter.INTEGER
           }
-        }
+        },
+        {
+          key: 'code',
+          type: FieldType.Text,
+          title: '股票代码',
+          primary: true,
+        },
       ],
     },
   },
@@ -189,6 +195,7 @@ basekit.addField({
           low: Number(low),
           close: Number(close),
           volume: Number(volume),
+          code: stock
         }
       }
     } catch (error) {
