@@ -178,13 +178,25 @@ basekit.addField({
       stock = stock.toLowerCase()
       console.log(`Step 2: 获取到股票查询结果 ${stock}`);
       const scale = 240
-      let len = 1 + Math.floor((new Date().getTime() - new Date(date).getTime()) / (1000 * 60 * 60 * 24))
+      let today = Date.parse(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`)
+      let target = Date.parse(`${new Date(date).getFullYear()}-${new Date(date).getMonth() + 1}-${new Date(date).getDate()}`)
+      let len = 5 + Math.round((today - target) / 86400000)
       if (len < 0) throw new Error("只能查询今天或历史信息");
-      let api = `https://quotes.sina.cn/cn/api/jsonp_v2.php/var%20_${stock}_${scale}_${new Date(date).getTime()}=/CN_MarketDataService.getKLineData?symbol=${stock}&scale=${scale}&ma=no&datalen=${1}`;
+      let api = `https://quotes.sina.cn/cn/api/jsonp_v2.php/var%20_${stock}_${scale}_${new Date().getTime()}=/CN_MarketDataService.getKLineData?symbol=${stock}&scale=${scale}&ma=no&datalen=${len}`;
       console.log(`Step 3: 合成api url ${api}`);
 
-      let data = await (await (await context.fetch(api, { method: 'GET' }))).text();
-      const { open, high, low, close, volume } = JSON.parse(data.split('=(')[1].replace(');', ''))[0]
+      let data = JSON.parse((await (await (await context.fetch(api, { method: 'GET' }))).text()).split('=(')[1].replace(');', ''))
+      // console.log(data);
+      let targetFormat = `${new Date(date).getFullYear()}-${(new Date(date).getMonth() + 1).toString().padStart(2, '0')}-${new Date(date).getDate().toString().padStart(2, '0')}`
+      for (let item of data){
+        // console.log(item['day'], targetFormat);
+        if (item['day'] == targetFormat){
+          data = item
+          break
+        }
+      }
+      const { open, high, low, close, volume } = data
+      
       console.log(`Step 4: 解析返回数据 ${open} ${high} ${low} ${close} ${volume}`);
       return {
         code: FieldCode.Success,
